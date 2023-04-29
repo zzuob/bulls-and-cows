@@ -9,15 +9,27 @@ enum State {
 public class Loop {
     String code;
     String guess;
-
     int turns = 0;
 
     private String start() {
         // set the secret code
-        code = Number.getRandomFromInput();
+        int codeLength = Number.getBoundedIntegerFromInput(
+                "Input the length of the secret code:", 1, 36);
+        int possibleCharacters = Number.getBoundedIntegerFromInput(
+                "Input the number of possible symbols in the code:", codeLength, 36);
+        code = Number.getRandomCode(codeLength, possibleCharacters);
         String hidden = "*".repeat(code.length());
+        StringBuilder range = new StringBuilder("(0-");
+        int maxDigit = possibleCharacters < 10 ? possibleCharacters - 1 : 9;
+        range.append(maxDigit);
+        if (possibleCharacters >= 10) {
+            range.append(", a-");
+            int maxCharIndex = possibleCharacters + 87 - 1; // 1st character = 0
+            range.append((char) maxCharIndex);
+        }
+        range.append(")");
         guess = "";
-        return String.format("The secret code is prepared: %s", hidden);
+        return String.format("The secret code is prepared: %s %s", hidden, range);
     }
 
     private String stateTurnNo() {
@@ -46,19 +58,19 @@ public class Loop {
         State state = State.START;
         while(state != State.END) {
             String message = "";
-            switch(state) {
-                case START:
+            switch (state) {
+                case START -> {
                     message = start();
                     state = State.TURN_NO;
-                    break;
-                case TURN_NO:
+                }
+                case TURN_NO -> {
                     message = stateTurnNo();
                     state = State.GUESS;
-                    break;
-                case GUESS:
+                }
+                case GUESS -> {
                     message = guessCode();
                     state = code.equals(guess) ? State.END : State.TURN_NO;
-                    break;
+                }
             }
             System.out.println(message);
         }

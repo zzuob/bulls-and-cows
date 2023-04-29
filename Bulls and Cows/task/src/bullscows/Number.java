@@ -5,15 +5,18 @@ import java.util.Scanner;
 
 public class Number {
 
-    public static String getRandomFromInput() {
+    public static int getBoundedIntegerFromInput(String prompt, int minValue, int maxValue) {
         Scanner scan = new Scanner(System.in);
-        int length;
         while (true) {
-            System.out.println("Please, enter the secret code's length:");
+            System.out.println(prompt);
             try {
                 if (scan.hasNextInt()) {
-                    length = scan.nextInt();
-                    return getRandomNumber(length);
+                    int result = scan.nextInt();
+                    if ((minValue <= result && result <= maxValue)) {
+                        return result;
+                    } else {
+                        System.out.printf("Error: Enter a number between %d and %d\n", minValue, maxValue);
+                    }
                 }
             } catch (Exception e) {
                 System.out.println("Error: "+e.getMessage());
@@ -22,11 +25,11 @@ public class Number {
     }
 
 
-    public static String getRandomNumber(int length) {
+    public static String getRandomCode(int length, int possibleSymbols) {
         // generate a pseudorandom number, with no repeated digits, that does not start with 0
-        if (length > 10) {
+        if (length > 36) {
             String message = String.format("can't generate a secret number with a length of %d", length);
-            message = message + " because there aren't enough unique digits";
+            message = message + " because there aren't enough unique characters";
             throw new ArrayIndexOutOfBoundsException(message);
 
         }
@@ -34,12 +37,17 @@ public class Number {
         while(result.length() < length) {
             // loop until result is the required length
             Random random = new Random();
-            String newDigit = String.valueOf(random.nextInt(10));
+            int randomNumber = random.nextInt(possibleSymbols); // possibleSymbols = 1 to 36
+            String newDigit;
+            if (randomNumber < 10) {
+                newDigit = String.valueOf(randomNumber);
+            } else { // translate random number to a-z
+                int charIndex = randomNumber + 87;
+                newDigit = String.valueOf((char) charIndex);
+            }
             String exclude = "((?![" + result + "]).)"; // does not compile if result is empty
             if (result.isEmpty()) {
-                if (!"0".equals(newDigit)) { // result cannot start with "0"
-                    result.append(newDigit); // append first digit, regex exclude will now compile
-                }
+                result.append(newDigit); // append first digit, regex exclude will now compile
             } else if (newDigit.matches(exclude)) { // do not repeat digits
                 result.append(newDigit);
             }
