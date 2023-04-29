@@ -20,7 +20,7 @@ public class Grade {
         } else if (cows == 0) {
             return bulls == 1 ? "1 bull." : String.format("%d bulls.", bulls);
         } else if (bulls == 0) {
-            return cows == 1? "1 cow." : String.format("%d cows.", cows);
+            return cows == 1 ? "1 cow." : String.format("%d cows.", cows);
         } else {
             if (bulls == 1 && cows == 1) {
                 return "1 bull and 1 cow.";

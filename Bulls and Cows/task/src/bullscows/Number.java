@@ -1,12 +1,13 @@
 package bullscows;
 
+import java.util.Random;
 import java.util.Scanner;
 
 public class Number {
 
     public static String getRandomFromInput() {
         Scanner scan = new Scanner(System.in);
-        int length = 0;
+        int length;
         while (true) {
             System.out.println("Please, enter the secret code's length:");
             try {
@@ -31,22 +32,16 @@ public class Number {
         }
         StringBuilder result = new StringBuilder();
         while(result.length() < length) {
-            // generate digits, will loop until completed if not enough distinct digits in pseudoRandomNumber
-            long pseudoRandomNumber = System.nanoTime();
-            String stringNumber = String.valueOf(pseudoRandomNumber);
-            for (int i = 0; i < stringNumber.length(); i++) {
-                if (result.length() == length) {
-                    break;
+            // loop until result is the required length
+            Random random = new Random();
+            String newDigit = String.valueOf(random.nextInt(10));
+            String exclude = "((?![" + result + "]).)"; // does not compile if result is empty
+            if (result.isEmpty()) {
+                if (!"0".equals(newDigit)) { // result cannot start with "0"
+                    result.append(newDigit); // append first digit, regex exclude will now compile
                 }
-                String newDigit = String.valueOf(stringNumber.charAt(i));
-                String exclude = "((?![" + result + "]).)"; // does not compile if result is empty
-                if (result.isEmpty()) {
-                    if (!"0".equals(newDigit)) { // result cannot start with "0"
-                        result.append(newDigit); // append first digit, regex exclude will now compile
-                    }
-                } else if (newDigit.matches(exclude)) { // do not repeat digits
-                    result.append(newDigit);
-                }
+            } else if (newDigit.matches(exclude)) { // do not repeat digits
+                result.append(newDigit);
             }
         }
         return result.toString();
