@@ -12,14 +12,15 @@ public class Loop {
     int turns = 0;
 
     private String start() {
-        // set the secret code
+        // set the secret code and tell the user the range of possible characters e.g. (0-9, a-j)
         int codeLength = Number.getBoundedIntegerFromInput(
                 "Input the length of the secret code:", 1, 36);
+        // codeLength is the minimum possible characters as each character is distinct
         int possibleCharacters = Number.getBoundedIntegerFromInput(
                 "Input the number of possible symbols in the code:", codeLength, 36);
         code = Number.getRandomCode(codeLength, possibleCharacters);
         String hidden = "*".repeat(code.length());
-        StringBuilder range = new StringBuilder("(0-");
+        StringBuilder range = new StringBuilder("(0-"); // 0 being the first character
         int maxDigit = possibleCharacters < 10 ? possibleCharacters - 1 : 9;
         range.append(maxDigit);
         if (possibleCharacters >= 10) {
@@ -50,6 +51,7 @@ public class Loop {
     }
 
     private String endGame() {
+        // reveal the code at the end of the game
         return String.format("Congrats! The secret code is %s.", code);
     }
 

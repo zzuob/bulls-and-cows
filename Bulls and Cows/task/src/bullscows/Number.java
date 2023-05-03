@@ -6,6 +6,7 @@ import java.util.Scanner;
 public class Number {
 
     public static int getBoundedIntegerFromInput(String prompt, int minValue, int maxValue) {
+        // input loop to make user input an integer in a given range
         Scanner scan = new Scanner(System.in);
         while (true) {
             System.out.println(prompt);
@@ -26,7 +27,7 @@ public class Number {
 
 
     public static String getRandomCode(int length, int possibleSymbols) {
-        // generate a pseudorandom number, with no repeated digits, that does not start with 0
+        // generate a pseudorandom code with no repeated characters and a given range of possible symbols (1-36)
         if (length > 36) {
             String message = String.format("can't generate a secret number with a length of %d", length);
             message = message + " because there aren't enough unique characters";
